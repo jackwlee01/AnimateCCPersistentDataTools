@@ -1,4 +1,4 @@
-package com.github.mathieuanthoine 
+package com.github.mathieuanthoine.persistentData 
 {
 	import adobe.utils.MMExecute;
 	import fl.controls.Button;

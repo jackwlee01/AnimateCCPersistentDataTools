@@ -1,4 +1,4 @@
-package com.github.mathieuanthoine 
+package com.github.mathieuanthoine.persistentData 
 {
 	import flash.display.MovieClip;
 	import flash.display.StageAlign;
