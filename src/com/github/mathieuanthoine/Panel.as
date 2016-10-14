@@ -163,7 +163,7 @@ package com.github.mathieuanthoine
 			if (pArgs != "") lJsfl +="','"+pArgs;
 			lJsfl +="');";
 			
-			debug (lJsfl);
+			//debug (lJsfl);
 			
 			return String(MMExecute (lJsfl));
 			
