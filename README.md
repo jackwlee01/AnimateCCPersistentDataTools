@@ -7,7 +7,7 @@
 ## Installation
 
 1. Paste The content of the Configuration folder in the Flash/Animate Configuration folder
-2. Persistent Data panel is now available in Window > Extensions menu
+2. Persistent Data panel is now available in Window > Extensions menu 
 
 <img src="https://github.com/mathieuanthoine/AnimateCCPersistentDataTools/blob/master/imgs/menu.png">
 
