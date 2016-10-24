@@ -11,6 +11,7 @@ package com.github.mathieuanthoine.persistentData
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
 	import flash.system.Capabilities;
+	import mx.utils.StringUtil;
 	
 	/**
 	 * ...
@@ -140,7 +141,7 @@ package com.github.mathieuanthoine.persistentData
 			}		
 			
 			for (i=0;i<mcGrid.dataProvider.length;i++) {
-				lTxt+=mcGrid.dataProvider.getItemAt(i).key+"="+mcGrid.dataProvider.getItemAt(i).value+"&";
+				lTxt+=StringUtil.trim(mcGrid.dataProvider.getItemAt(i).key)+"="+StringUtil.trim(mcGrid.dataProvider.getItemAt(i).value)+"&";
 			}
 			
 			if (lTxt == "") callJSFL("clear");
