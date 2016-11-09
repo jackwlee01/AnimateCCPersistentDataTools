@@ -9,6 +9,7 @@ package com.github.mathieuanthoine.persistentData
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.external.ExternalInterface;
 	import flash.geom.ColorTransform;
 	import flash.system.Capabilities;
 	import mx.utils.StringUtil;
@@ -40,12 +41,10 @@ package com.github.mathieuanthoine.persistentData
 			super();
 			addEventListener(Event.ADDED_TO_STAGE, init);
 		}
-		
+				
 		protected function init (pEvent:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			stage.addEventListener(Event.RESIZE, onResize);
-			stage.addEventListener (Event.MOUSE_LEAVE,lostFocus);
-			stage.addEventListener (MouseEvent.MOUSE_OVER, getFocus);
 			changeTheme();
 			addChild(mcBg);
 			
@@ -55,6 +54,9 @@ package com.github.mathieuanthoine.persistentData
 			btnAdd.addEventListener(MouseEvent.CLICK,onAdd);
 			btnDel.addEventListener(MouseEvent.CLICK, onDel);
 			btnType.addEventListener(MouseEvent.CLICK, onType);
+			
+			ExternalInterface.addCallback("callPanel", load); 
+			callJSFL("init");
 			
 			onResize();
 			
@@ -83,25 +85,8 @@ package com.github.mathieuanthoine.persistentData
 			btnAdd.y=stage.stageHeight-25;
 			btnType.y=stage.stageHeight-25;
 		}
-		
-		protected function lostFocus (pEvent:Event): void {
-			stage.removeEventListener (Event.MOUSE_LEAVE,lostFocus);
-			stage.addEventListener (MouseEvent.MOUSE_OVER,getFocus);
-			addChild(mcBg);
-			mcBg.txt.visible=true;
-			btnAdd.setFocus();
-			onChange();
-		}
 
-		protected function getFocus (pEvent:Event): void {
-			stage.addEventListener (Event.MOUSE_LEAVE,lostFocus);
-			stage.removeEventListener (MouseEvent.MOUSE_OVER,getFocus);
-			addChildAt(mcBg,0);
-			mcBg.txt.visible=false;
-			load(callJSFL("load"));
-		}
-
-		protected function onChange (pEvent:DataGridEvent=null):void {
+		protected function onChange (pEvent:DataGridEvent = null):void {
 			addEventListener(Event.ENTER_FRAME,save);
 		}
 
@@ -114,6 +99,7 @@ package com.github.mathieuanthoine.persistentData
 				if (mcGrid.selectedIndex==-1) mcGrid.dataProvider.removeItemAt(mcGrid.length-1);
 				else mcGrid.dataProvider.removeItemAt(mcGrid.selectedIndex);
 			}
+			onChange();
 		}
 		
 		protected function onType(pEventMouseEvent:MouseEvent) {
@@ -126,7 +112,7 @@ package com.github.mathieuanthoine.persistentData
 			removeEventListener(Event.ENTER_FRAME, subType);
 			if (btnType.selected) btnType.label = "symbol data";
 			else btnType.label = "instance data";
-			load(callJSFL("load"));
+			load();
 		}
 
 		protected function save(pEvent:Event = null):void {
@@ -145,11 +131,28 @@ package com.github.mathieuanthoine.persistentData
 			}
 			
 			if (lTxt == "") callJSFL("clear");
-			else callJSFL("save",lTxt.substring(0,lTxt.length-1));
+			else callJSFL("save", lTxt.substring(0, lTxt.length - 1));
+			
+		}
+		
+		protected function load (pArg:String = null):void {
+			btnAdd.setFocus();
+			subLoad(callJSFL("load"));
 		}
 
-		protected function load (pArg:String=""):void {
+		protected function subLoad (pArg:String=""):void {
 			mcGrid.dataProvider= new DataProvider();
+			if (pArg == "non-symbol") {
+				addChild(mcBg);
+				mcBg.txt.visible = true;
+				return;
+			}
+			
+			if (getChildAt(0) != mcBg) {
+				addChildAt(mcBg,0);
+				mcBg.txt.visible=false;
+			}
+			
 			if (pArg=="") return;
 			var lList=pArg.split("&");
 			for (var i:int =0;i<lList.length;i++) {
@@ -178,6 +181,7 @@ package com.github.mathieuanthoine.persistentData
 		public function destroy (): void {
 			instance = null;
 		}
-
+		
 	}
+
 }

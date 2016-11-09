@@ -4,6 +4,17 @@ var SYMBOL_DATA="symbol data";
 var elem;
 var dataType;
 
+var eventID;
+
+function init () {
+	if (eventID!=null) fl.removeEventListener("selectionChanged",eventID);
+	eventID = fl.addEventListener("selectionChanged",selectionChanged);
+}
+
+function selectionChanged () {
+	fl.getSwfPanel("Persistent Data").call("callPanel","");
+}
+
 function colorTheme (pType) {
 	return fl.getThemeColor(fl.getThemeColorParameters()[0])+","+fl.getThemeColor(fl.getThemeColorParameters()[5]);
 }
@@ -54,7 +65,7 @@ function load (pType) {
 		return lArg.substring(0,lArg.length-1);
 	}
 	
-	return "";
+	return "non-symbol";
 }
 
 function save (pType,pArg) {
